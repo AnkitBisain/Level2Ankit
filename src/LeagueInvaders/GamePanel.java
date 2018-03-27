@@ -1,5 +1,7 @@
 package LeagueInvaders;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,11 +13,19 @@ import javax.swing.Timer;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Timer timer;
-	GameObject gameObject;
+	final int MENU_STATE = 0;
+	final int GAME_STATE = 1;
+	final int END_STATE = 2;
+	int currentState = MENU_STATE;
+	Font titleFont;
+	Font stringFont;
+	RocketShip rocket;
 
 	public GamePanel() {
 		timer = new Timer(1000 / 60, this);
-		gameObject = new GameObject(10,10,100,100);
+		titleFont = new Font("Arial", Font.PLAIN, 48);
+		stringFont = new Font("Arial", Font.PLAIN, 24);
+		rocket = new RocketShip(225, 700, 50, 50);
 	}
 
 	void startGame() {
@@ -23,13 +33,63 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	}
 
+	void updateMenuState() {
+	}
+
+	void updateGameState() {
+		rocket.update();
+	}
+
+	void updateEndState() {
+	}
+
+	void drawMenuState(Graphics g) {
+		g.setFont(titleFont);
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, LeagueInvaders.width, LeagueInvaders.height);
+		g.setColor(Color.YELLOW);
+		g.drawString("League Invaders", 80, 200);
+		g.setFont(stringFont);
+		g.drawString("Press ENTER to start", 130, 500);
+		g.drawString("Press SPACE for instructions", 90, 650);
+	}
+
+	void drawGameState(Graphics g) {
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, LeagueInvaders.width, LeagueInvaders.height);
+		rocket.draw(g);
+	}
+
+	void drawEndState(Graphics g) {
+		g.setColor(Color.RED);
+		g.fillRect(0, 0, LeagueInvaders.width, LeagueInvaders.height);
+		g.setColor(Color.BLACK);
+		g.setFont(titleFont);
+		g.drawString("Game Over", 130, 200);
+		g.setFont(stringFont);
+		g.drawString("You killed (#) enemies", 130, 500);
+		g.drawString("Press ENTER to restart", 120, 650);
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
-		gameObject.draw(g);
+		if (currentState == MENU_STATE) {
+			drawMenuState(g);
+		} else if (currentState == GAME_STATE) {
+			drawGameState(g);
+		} else if (currentState == END_STATE) {
+			drawEndState(g);
+		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		gameObject.update();
+		if (currentState == MENU_STATE) {
+			updateMenuState();
+		} else if (currentState == GAME_STATE) {
+			updateGameState();
+		} else if (currentState == END_STATE) {
+			updateEndState();
+		}
 		repaint();
 	}
 
@@ -40,7 +100,43 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (currentState >= END_STATE) {
 
+				currentState = MENU_STATE;
+
+			} else {
+				currentState++;
+			}
+			System.out.println(currentState);
+
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			if (currentState == GAME_STATE) {
+				if(0<rocket.y) {
+				rocket.y += -rocket.speed;
+				}
+			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			if (currentState == GAME_STATE) {
+				if(rocket.y<800) {
+				rocket.y += rocket.speed;}
+			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			if (currentState == GAME_STATE) {
+				if(0<rocket.x) {
+				rocket.x += -rocket.speed;
+			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			if (currentState == GAME_STATE) {
+				if(rocket.x<500) {
+				rocket.x += rocket.speed;
+				}
+			}
+		}}
 	}
 
 	@Override
