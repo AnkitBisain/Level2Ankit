@@ -20,12 +20,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	Font titleFont;
 	Font stringFont;
 	RocketShip rocket;
+	ObjectManager obj;
 
 	public GamePanel() {
 		timer = new Timer(1000 / 60, this);
 		titleFont = new Font("Arial", Font.PLAIN, 48);
 		stringFont = new Font("Arial", Font.PLAIN, 24);
 		rocket = new RocketShip(225, 700, 50, 50);
+		obj = new ObjectManager(rocket);
 	}
 
 	void startGame() {
@@ -37,7 +39,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	}
 
 	void updateGameState() {
-		rocket.update();
+		obj.update();
+		obj.manageEnemies();
 	}
 
 	void updateEndState() {
@@ -57,7 +60,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void drawGameState(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, LeagueInvaders.width, LeagueInvaders.height);
-		rocket.draw(g);
+		obj.draw(g);
 	}
 
 	void drawEndState(Graphics g) {
@@ -113,30 +116,28 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			if (currentState == GAME_STATE) {
-				if(0<rocket.y) {
 				rocket.y += -rocket.speed;
-				}
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			if (currentState == GAME_STATE) {
-				if(rocket.y<800) {
-				rocket.y += rocket.speed;}
+				rocket.y += rocket.speed;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			if (currentState == GAME_STATE) {
-				if(0<rocket.x) {
 				rocket.x += -rocket.speed;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			if (currentState == GAME_STATE) {
-				if(rocket.x<500) {
 				rocket.x += rocket.speed;
-				}
 			}
-		}}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+	        ObjectManager.addProjectile(new Projectile(rocket.x+20, rocket.y+20, 10, 10));
+		}
+		
 	}
 
 	@Override
