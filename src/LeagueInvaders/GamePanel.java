@@ -41,6 +41,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 	void updateGameState() {
 		obj.update();
 		obj.manageEnemies();
+		obj.checkCollision();
+		obj.purgeObjects();
+
 	}
 
 	void updateEndState() {
@@ -135,9 +138,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-	        ObjectManager.addProjectile(new Projectile(rocket.x+20, rocket.y+20, 10, 10));
+			ObjectManager.addProjectile(new Projectile(rocket.x + 20, rocket.y + 20, 10, 10));
 		}
-		
+
 	}
 
 	@Override

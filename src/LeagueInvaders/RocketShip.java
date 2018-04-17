@@ -7,12 +7,12 @@ public class RocketShip extends GameObject {
 	int speed;
 	public RocketShip(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		speed = 5;
+		speed = 10;
 		// TODO Auto-generated constructor stub
 	}
 
 	void update() {
-
+		 super.update();
 	}
 
 	void draw(Graphics g) {

@@ -10,7 +10,8 @@ public class Alien extends GameObject{
 		// TODO Auto-generated constructor stub
 	}
 	void update(){
-		y++;
+		 super.update();
+		y+=2;
 		if( this.y >800) {
 			this.isAlive = false;
 		}
